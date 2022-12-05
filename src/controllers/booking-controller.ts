@@ -31,11 +31,22 @@ export async function postBooking(req: AuthenticatedRequest, res: Response) {
     const newbooking = await bookingService.createBooking(userId, roomId);
     return res.status(httpStatus.OK).send({ id: newbooking.id });
   } catch (error) {
-    return res.sendStatus(httpStatus.FORBIDDEN);
+    return res.sendStatus(httpStatus.UNAUTHORIZED);
   }
 }
 
-// export async function updateBooking(req: AuthenticatedRequest, res: Response){
-//   const { userId } = req;
-//   const roomId = Number(req.body.roomId);
-// }
+export async function updateBooking(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+  const roomId = Number(req.body.roomId);
+  const bookingId = Number(req.params.bookingId);
+
+  try {
+    if(!roomId || !bookingId) {
+      return res.sendStatus(httpStatus.BAD_REQUEST);
+    }
+    const booking = await bookingService.updateBooking(bookingId, roomId, userId);
+    return res.status(httpStatus.OK).send({ id: booking.id });
+  } catch (error) {
+    return res.sendStatus(httpStatus.UNAUTHORIZED);
+  }
+}

@@ -1,4 +1,4 @@
-import { notFoundError } from "@/errors";
+import { notFoundError, unauthorizedError } from "@/errors";
 import bookingRepository from "@/repositories/bookings-repository";
 import enrollmentRepository from "@/repositories/enrollment-repository";
 import ticketRepository from "@/repositories/ticket-repository";
@@ -30,9 +30,25 @@ async function createBooking(userId: number, roomId: number) {
   return newbooking;
 }
 
+async function updateBooking(bookingId: number, roomId: number, userId: number) {
+  const booking = await bookingRepository.findBookingId(bookingId);
+  if(!booking) {
+    throw notFoundError();
+  }
+  if(booking.userId !== userId) {
+    throw unauthorizedError();
+  }
+  await getBookings(roomId);
+
+  const result = await bookingRepository.updateBooking(bookingId, roomId);
+
+  return result;
+}
+
 const bookingService = {
   getBookings,
   createBooking,
+  updateBooking
 };
 
 export default bookingService;
