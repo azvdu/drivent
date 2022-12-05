@@ -19,8 +19,20 @@ async function getBookings(userId: number) {
   };
 }
 
+async function createBooking(userId: number, roomId: number) {
+  await getBookings(userId);
+  
+  const userBooking = await bookingRepository.findBooking(userId);
+  if(userBooking) {
+    throw notFoundError();
+  }
+  const newbooking = bookingRepository.createBooking(userId, roomId);
+  return newbooking;
+}
+
 const bookingService = {
   getBookings,
+  createBooking,
 };
 
 export default bookingService;
