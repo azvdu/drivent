@@ -33,7 +33,7 @@ const server = supertest(app);
 describe("GET /hotels", () => {
   it("should respond with status 401 if no token is given", async () => {
     const response = await server.get("/hotels");
-
+    
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 

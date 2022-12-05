@@ -8,10 +8,11 @@ async function getBookings(userId: number) {
   if(!enrollments) {
     throw notFoundError();
   }
-  const ticket = await ticketRepository.findTickeWithTypeById(enrollments.id);
-  if(!ticket || ticket.TicketType.includesHotel !== true || ticket.TicketType.isRemote !== true || ticket.status === "RESERVED") {
+  const ticket = await ticketRepository.findTicketByEnrollmentId(enrollments.id);
+  if(!ticket || ticket.TicketType.includesHotel !== true || ticket.TicketType.isRemote === true || ticket.status === "RESERVED") {
     throw notFoundError();
   }
+
   const bookingList = await bookingRepository.findBooking(userId);
   return {
     id: bookingList.id,
